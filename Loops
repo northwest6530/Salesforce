@@ -19,14 +19,14 @@ for (Integer i : myInts) {
 ------
 
 List<Invoice_Statement__c> ListInvStmt = [SELECT ID FROM Invoice_Statement__c];
-// Call the postOrder method to test the asynchronous call
-List<Id> ListIds1 = new List<Id>();
+
+List<Id> ListIds = new List<Id>();
 
 for (Invoice_Statement__c InvStmt :ListInvStmt)
 {
-    ListIds1.add(InvStmt.id);    
+    ListIds.add(InvStmt.id);    
     system.debug('Id: ' + InvStmt.id);
 }
 
 
-system.debug('ListIds1 Size: ' + ListIds1.size());
+system.debug('ListIds Size: ' + ListIds.size());
