@@ -33,4 +33,18 @@ for ( Id singleId : ListIds)
     system.debug('Here are ids: '+singleId);
 }
 
+------
+
+// Create a list of account records from a SOQL query
+List<Account> accs = [SELECT Id, Name FROM Account WHERE Name = 'Siebel']; 
+
+// Loop through the list and update the Name field
+for(Account a : accs){
+   a.Name = 'Oracle';
+}
+
+// Update the database
+update accs;
+
+
 
