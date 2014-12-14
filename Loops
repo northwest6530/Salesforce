@@ -21,12 +21,16 @@ for (Integer i : myInts) {
 List<Invoice_Statement__c> ListInvStmt = [SELECT ID FROM Invoice_Statement__c];
 
 List<Id> ListIds = new List<Id>();
-
 for (Invoice_Statement__c InvStmt :ListInvStmt)
 {
     ListIds.add(InvStmt.id);    
-    system.debug('Id: ' + InvStmt.id);
+    system.debug('Id: ' + InvStmt.id);  
+}
+system.debug('ListIds Size: ' + ListIds.size());
+
+for ( Id singleId : ListIds)
+{
+    system.debug('Here are ids: '+singleId);
 }
 
 
-system.debug('ListIds Size: ' + ListIds.size());
