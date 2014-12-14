@@ -64,7 +64,41 @@ for (Account a : [SELECT Id, Name from Account
     // Your code
 }
 
+-----
 
+// The single sObject format executes the for loop once per returned record
+Integer i = 0;
+for (Account tmp : [SELECT Id FROM Account WHERE Name = 'yyy']) {
+    i++;
+}
+
+System.assert(i == 3); // Since there were three accounts named 'yyy' in the
+                       // database, the loop executed three times
+
+                       
+// The sObject list format executes the for loop once per returned batch
+// of records
+i = 0;
+Integer j;
+for (Account[] tmp : [SELECT Id FROM Account WHERE Name = 'yyy']) {
+    j = tmp.size();
+    i++;
+}
+System.assert(j == 3); // The list should have contained the three accounts
+                       // named 'yyy'
+System.assert(i == 1); // Since a single batch can hold up to 200 records and,
+                       // only three records should have been returned, the 
+                       // loop should have executed only once
+
+SOQL For Loops Versus Standard SOQL Queries:
+SOQL for loops differ from standard SOQL statements because of the method they use to retrieve sObjects. While the standard queries discussed in SOQL and SOSL Queries can retrieve either the count of a query or a number of object records, SOQL for loops retrieve all sObjects, using efficient chunking with calls to the query and queryMore methods of the SOAP API. Developers should always use a SOQL for loop to process query results that return many records, to avoid the limit on heap size.
+
+Note that queries including an aggregate function don't support queryMore. A run-time exception occurs if you use a query containing an aggregate function that returns more than 2,000 rows in a for loop.
+
+SOQL For Loop Formats:
+SOQL for loops can process records one at a time using a single sObject variable, or in batches of 200 sObjects at a time using an sObject list:
+The single sObject format executes the for loop's <code_block> once per sObject record. Consequently, it is easy to understand and use, but is grossly inefficient if you want to use data manipulation language (DML) statements within the for loop body. Each DML statement ends up processing only one sObject at a time.
+The sObject list format executes the for loop's <code_block> once per list of 200 sObjects. Consequently, it is a little more difficult to understand and use, but is the optimal choice if you need to use DML statements within the for loop body. Each DML statement can bulk process a list of sObjects at a time.                       
 
 
 
