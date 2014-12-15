@@ -47,3 +47,37 @@ Note that this map is only available in update and delete triggers.
 
 size 	
 The total number of records in a trigger invocation, both old and new.
+
+
+trigger.new and trigger.old cannot be used in Apex DML operations.
+trigger.old is always read-only.
+You cannot delete trigger.new.
+
+Using Maps and Sets in Bulk Triggers:
+Set and map data structures are critical for successful coding of bulk triggers. 
+Sets can be used to isolate distinct records, while maps can be used to hold query 
+results organized by record ID.
+
+
+trigger oppLineTrigger on OpportunityLineItem (before insert) {
+
+    // For every OpportunityLineItem record, add its associated pricebook entry
+    // to a set so there are no duplicates.
+    Set<Id> pbeIds = new Set<Id>();
+    for (OpportunityLineItem oli : Trigger.new) 
+        pbeIds.add(oli.pricebookentryid);
+
+    // Query the PricebookEntries for their associated product color and place the results
+    // in a map.
+    Map<Id, PricebookEntry> entries = new Map<Id, PricebookEntry>(
+            [select product2.color__c from pricebookentry where id in :pbeIds]);
+         
+    // Now use the map to set the appropriate color on every OpportunityLineItem processed
+    // by the trigger.
+    for (OpportunityLineItem oli : Trigger.new) 
+        oli.color__c = entries.get(oli.pricebookEntryId).product2.color__c;  
+}
+
+
+
+
