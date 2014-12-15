@@ -78,6 +78,30 @@ trigger oppLineTrigger on OpportunityLineItem (before insert) {
         oli.color__c = entries.get(oli.pricebookEntryId).product2.color__c;  
 }
 
+Correlating Records with Query Results in Bulk Triggers:
+
+trigger oppTrigger on Opportunity (before delete) {
+    for (Quote__c q : [SELECT opportunity__c FROM quote__c 
+                       WHERE opportunity__c IN :Trigger.oldMap.keySet()]) {
+        Trigger.oldMap.get(q.opportunity__c).addError('Cannot delete 
+                                                       opportunity with a quote');
+    }
+}
+
+
+Trigger MileageTrigger on Mileage__c (before insert, before update) {
+   Set<ID> ids = Trigger.newMap.keySet();
+   List<User> c = [SELECT Id FROM user WHERE mileageid__c in :ids];
+}
+
+Pattern:
+
+Create a collection of values that you need to do a SOQL query against
+Do a single SOQL query for your relevant records and add the results to a Map
+Loop across all records in Trigger.new and match each record with its SOQL query result
+Apply your business logic to each record and its SOQL result
+
+
 
 
 
