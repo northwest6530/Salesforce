@@ -1,0 +1,51 @@
+Custom settings are similar to custom objects and enable application developers to create custom sets of data, 
+as well as create and associate custom data for an organization, profile, or specific user. All custom settings 
+data is exposed in the application cache, which enables efficient access without the cost of repeated queries 
+to the database. This data can then be used by formula fields, validation rules, Apex, and the SOAP API.
+
+There are two types of custom settings:
+
+List Custom Settings:
+
+  A type of custom setting that provides a reusable set of static data that can be accessed across your 
+  organization. If you use a particular set of data frequently within your application, putting that data 
+  in a list custom setting streamlines access to it. Data in list settings does not vary with profile or 
+  user, but is available organization-wide.
+  
+  Because the data is cached, access is low-cost and efficient: you don't have to use SOQL queries that 
+  count against your governor limits.
+  
+  Map<String_dataset_name, CustomSettingName__c> mcs = CustomSettingName__c.getAll();
+  CustomSettingName__c mc = CustomSettingName__c.getValues(data_set_name);
+  
+  The following example uses a list custom setting called Games. Games has a field called GameType. 
+  This example determines if the value of the first data set is equal to the string PC.
+  
+  List<Games__C> mcs = Games__c.getall().values();
+  boolean textField = null;
+  if (mcs[0].GameType__c == 'PC') {
+    textField = true;
+  }
+  system.assertEquals(textField, true);
+  
+  
+Hierarchy Custom Settings:
+
+  A type of custom setting that uses a built-in hierarchical logic that lets you “personalize” settings 
+  for specific profiles or users. The hierarchy logic checks the organization, profile, and user settings 
+  for the current user and returns the most specific, or “lowest,” value. In the hierarchy, settings for 
+  an organization are overridden by profile settings, which, in turn, are overridden by user settings.
+  
+  CustomSettingName__c mc = CustomSettingName__c.getOrgDefaults();
+  
+  The following example uses the getInstance method to return the data set values for the specified profile. 
+  The getInstance method can also be used with a user ID.
+  
+  CustomSettingName__c mc = CustomSettingName__c.getInstance(Profile_ID);
+  
+  
+https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_custom_settings.htm#cs_country_example
+  
+  
+  
+  
