@@ -1,3 +1,16 @@
+Apex supports the following five types of procedural loops:
+• do {statement} while (Boolean_condition);
+• while (Boolean_condition) statement;
+• for (initialization; Boolean_exit_condition; increment) statement;
+• for (variable : array_or_set) statement;
+• for (variable : [inline_soql_query]) statement;
+
+
+All loops allow for loop control structures:
+• break; exits the entire loop
+• continue; skips to the next iteration of the loop
+
+
 For Loops
 
 List or Set Iteration for Loops
